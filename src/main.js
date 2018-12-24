@@ -6,9 +6,11 @@ import router from './router'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import Vuex from 'vuex'
+import VCharts from 'v-charts'
 
 Vue.use(iView)
 Vue.use(Vuex)
+Vue.use(VCharts)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

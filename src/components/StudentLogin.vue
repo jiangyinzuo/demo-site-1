@@ -57,12 +57,13 @@ export default {
 <style scoped>
   h6 {
     text-align: center;
+    font-size: 26px;
   }
   .wrapper {
     position: relative;
     margin: 0 auto;
-    top: 300px;
-    width: 350px;
+    top: 220px;
+    width: 320px;
   }
   .form {
     text-align: center;
