@@ -7,10 +7,13 @@ import iView from 'iview'
 import 'iview/dist/styles/iview.css'
 import Vuex from 'vuex'
 import VCharts from 'v-charts'
+import vueEventCalendar from 'vue-event-calendar'
+import 'vue-event-calendar/dist/style.css'
 
 Vue.use(iView)
 Vue.use(Vuex)
 Vue.use(VCharts)
+Vue.use(vueEventCalendar, {locale: 'zh',color: '#9bd4ff'})
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

@@ -2,10 +2,14 @@
   <div>
     <home-header></home-header>
     <div class="wrapper">
-      <Row style="background: #eee; padding: 15px">
+      <Row class-name="row">
         <Col span="6">
-          <Menu :theme="theme3" active-name="2" @on-select="handleMenu">
+          <div style="margin: 0 auto">
+          <Menu theme="light" :active-name="active" @on-select="handleMenu">
             <Button class="search" @click="showDrawer = true" type="primary">筛选</Button>
+            <MenuItem name="4">
+              校招日历
+            </MenuItem>
             <MenuItem name="2">
               参考信息
             </MenuItem>
@@ -15,7 +19,11 @@
             <MenuItem name="1">
               职位收藏
             </MenuItem>
+            <MenuItem name="3">
+              我的好友
+            </MenuItem>
           </Menu>
+          </div>
           <Drawer
             v-model="showDrawer"
             title="条件筛选"
@@ -44,11 +52,11 @@
           </Drawer>
         </Col>
         <Col span="18">
-          <div v-show="showJobs">
+          <div v-if="showBoard === 'Jobs'">
             <Card
               style="width:900px; margin:10px"
               v-for="item in infoList"
-              v-show="showItem.IT"
+              v-if="showItem === item.industry"
             >
               <p style="text-align:center; font-size: 20px" slot="title">
                 {{item.title}}<Icon :type="item.star" @click="handleStar(item)" class="star"/>
@@ -56,7 +64,22 @@
               <p>{{item.content}}</p>
             </Card>
           </div>
-          <charts v-show="showCharts"></charts>
+          <charts v-else-if="showBoard === 'Charts'"></charts>
+          <div v-else-if="showBoard === 'Files'">
+            <Card
+              style="width:900px; margin:10px"
+              v-for="item in infoList"
+              v-show="item.showStar"
+            >
+              <p style="text-align:center; font-size: 20px" slot="title">
+                {{item.title}}<Icon :type="item.star" @click="handleStar(item)" class="star"/>
+              </p>
+              <p>{{item.content}}</p>
+            </Card>
+          </div>
+          <div v-else-if="showBoard === 'Calendar'">
+            <calendar></calendar>
+          </div>
         </Col>
       </Row>
     </div>
@@ -66,24 +89,21 @@
 <script>
 import HomeHeader from './components/HomeHeader'
 import Charts from './components/Charts'
+import Calendar from './components/Calendar'
 
 export default {
   name: 'StudentHome',
   components: {
     HomeHeader,
-    Charts
+    Charts,
+    Calendar
   },
   data () {
     return {
-      theme3: 'light',
+      active: '4',
       showDrawer: false,
-      showCharts: true,
-      showJobs: false,
-      showFiles: false,
-      showItem: {
-        IT: false,
-        eco: false
-      },
+      showItem: '',
+      showBoard: 'Charts',
       styles: {
         height: 'calc(100% - 55px)',
         overflow: 'auto',
@@ -95,76 +115,78 @@ export default {
         industry: '不限',
         major: '不限'
       },
-      cityList: [
-        {
-          value: '不限',
-          label: '不限'
-        },
-        {
-          value: '上海',
-          label: '上海'
-        },
-        {
-          value: '广州',
-          label: '广州'
-        },
-        {
-          value: '成都',
-          label: '成都'
-        },
-        {
-          value: '深圳',
-          label: '深圳'
-        },
-        {
-          value: '北京',
-          label: '北京'
-        }
-      ],
-      industryList: [
-        {
-          value: '不限',
-          label: '不限'
-        },
-        {
-          value: '互联网/IT',
-          label: '互联网/IT'
-        },
-        {
-          value: '金融',
-          label: '金融'
-        }
-      ],
-      majorList: [
-        {
-          value: '不限',
-          label: '不限'
-        },
-        {
-          value: '计算机/软件',
-          label: '计算机/软件'
-        },
-        {
-          value: '医学',
-          label: '医学'
-        },
-        {
-          value: '机械',
-          label: '机械'
-        }
-      ],
+      cityList: [{
+        value: '不限',
+        label: '不限'
+      }, {
+        value: '上海',
+        label: '上海'
+      }, {
+        value: '广州',
+        label: '广州'
+      }, {
+        value: '成都',
+        label: '成都'
+      }, {
+        value: '深圳',
+        label: '深圳'
+      }, {
+        value: '北京',
+        label: '北京'
+      }],
+      industryList: [{
+        value: '不限',
+        label: '不限'
+      }, {
+        value: '互联网/IT',
+        label: '互联网/IT'
+      }, {
+        value: '金融',
+        label: '金融'
+      }, {
+        value: '制造业',
+        label: '制造业'
+      }],
+      majorList: [{
+        value: '不限',
+        label: '不限'
+      }, {
+        value: '计算机/软件',
+        label: '计算机/软件'
+      }, {
+        value: '医学',
+        label: '医学'
+      }, {
+        value: '机械',
+        label: '机械'
+      }, {
+        value: '经管',
+        label: '经管'
+      }],
       infoList: [{
+        industry: 'IT',
+        showStar: false,
         star: 'ios-star-outline',
         title: 'web前端工程师',
         content: 'web前端工程师是一种新兴的职业，他们既要和上游的UI设计师、交互设计师合作，又要和下游的后端工程师沟通。要想成为一名优秀的前端，需要有终身学习的能力。'
       }, {
+        industry: 'IT',
+        showStar: false,
         star: 'ios-star-outline',
         title: '后端工程师',
         content: '后端工程师的工作与后台数据库有关。'
       }, {
+        industry: 'IT',
+        showStar: false,
         star: 'ios-star-outline',
         title: '算法工程师',
         content: '人工智能时代竞争及其激烈的岗位，同时待遇、门槛较高。'
+      }, {
+        industry: 'eco',
+        showStar: false,
+        star: 'ios-star-outline',
+        title: '财务管理',
+        content: '负责销售收入的核算及分析。需要具备一定的数据统计、分析能力，专业判断能力，具有良好的沟通能力、应变能力。'
       }]
     }
   },
@@ -172,31 +194,32 @@ export default {
     handleInfo () {
       this.showDrawer = false
       if (this.selectItem.major === '计算机/软件') {
-        this.showItem.IT = true
-      } else {
-        this.showItem.IT = false
+        this.showItem = 'IT'
       }
+      if (this.selectItem.major === '经管') {
+        this.showItem = 'eco'
+      }
+      this.active = '0'
+      this.showBoard = 'Jobs'
     },
     handleMenu (name) {
       if (name === '0') {
-        this.showFiles = false
-        this.showCharts = false
-        this.showJobs = true
+        this.showBoard = 'Jobs'
       } else if (name === '1') {
-        this.showJobs = false
-        this.showCharts = false
-        this.showFiles = true
+        this.showBoard = 'Files'
       } else if (name === '2') {
-        this.showFiles = false
-        this.showJobs = false
-        this.showCharts = true
+        this.showBoard = 'Charts'
+      } else if (name === '4') {
+        this.showBoard = 'Calendar'
       }
     },
     handleStar (item) {
       if (item.star === 'ios-star-outline') {
         item.star = 'ios-star'
+        item.showStar = true
       } else {
         item.star = 'ios-star-outline'
+        item.showStar = false
       }
     }
   }
@@ -215,5 +238,13 @@ export default {
     top: 10px;
     font-size: 30px;
     cursor: pointer;
+  }
+  .row {
+    background: #eee;
+    overflow: hidden;
+    height: 100%;
+  }
+  .wrapper {
+    min-height: 601px
   }
 </style>
