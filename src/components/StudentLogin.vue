@@ -43,7 +43,7 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success('Success!')
+          this.$Message.success('登录成功！')
           this.$router.push({name: 'StudentHome'})
         } else {
           this.$Message.error('Fail!')
